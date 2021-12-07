@@ -1,6 +1,7 @@
 package io.autodidact.visibilitytracker;
 
 import android.view.View;
+import android.graphics.Rect;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -26,29 +27,29 @@ public class VisibilityTrackerModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void isViewVisible(
-    final int tag,
-    final Callback success,
-    final Callback failure
-  ) {
+  public void isViewVisible(final int tag, final Callback success, final Callback failure) {
     try {
       final ReactApplicationContext context = getReactApplicationContext();
-      UIManagerModule uiManager = context.getNativeModule(
-        UIManagerModule.class
-      );
-      uiManager.addUIBlock(
-        new UIBlock() {
-          public void execute(NativeViewHierarchyManager nvhm) {
+      UIManagerModule uiManager = context.getNativeModule(UIManagerModule.class);
+      uiManager.addUIBlock(new UIBlock() {
+        public void execute(NativeViewHierarchyManager nvhm) {
+          try {
             View view = nvhm.resolveView(tag);
-            Rect rect = new Rect();
-            view.getGlobalVisibleRect(rect);
-            boolean isInViewPort =
-              (view.getHeight() * view.getWidth() * 0.7) >=
-              (rect.height() * rect.width());
-            success.invoke(view.isShown() && isInViewPort);
+            if (view.isShown()) {
+              Rect rect = new Rect();
+              view.getGlobalVisibleRect(rect);
+              double sVisible = rect.width() * rect.height();
+              double sTotal = view.getWidth() * view.getHeight();
+              success.invoke((100 * sVisible / sTotal) >= 70);
+            } else {
+              success.invoke(false);
+            }
+          } catch (Exception e) {
+            success.invoke(false);
+
           }
         }
-      );
+      });
     } catch (Throwable throwable) {
       failure.invoke(throwable);
     }

@@ -1,8 +1,8 @@
 {
-  "name": "react-native-visibility-tracker",
+  "name": "rn-android-in-view",
   "title": "React Native Visibility Tracker",
-  "version": "0.1.2",
-  "description": "react-visibility-sensor for react-native",
+  "version": "1.0.1",
+  "description": "Detects if view is at least 70% in the viewport",
   "main": "src",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,8 +10,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShaMan123/react-native-visibility-tracker.git",
-    "baseUrl": "https://github.com/ShaMan123/react-native-visibility-tracker"
+    "url": "git+https://github.com/frzkn/rn-android-in-view.git",
+    "baseUrl": "https://github.com/frzkn/rn-android-in-view"
   },
   "keywords": [
     "react-native",
@@ -27,12 +27,11 @@
     "tracker"
   ],
   "author": {
-    "name": "ShaMan123",
-    "email": "ShaMan123@github.com"
+    "username": "frzkn",
+    "name": "Faraz Khan"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",
-  "readmeFilename": "README.md",
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
@@ -47,5 +46,12 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {},
-  "types": "react-native-visibility-tracker.d.ts"
+  "types": "react-native-visibility-tracker.d.ts",
+  "bugs": {
+    "url": "https://github.com/frzkn/rn-android-in-view/issues"
+  },
+  "homepage": "https://github.com/frzkn/rn-android-in-view/",
+  "directories": {
+    "doc": "docs"
+  }
 }
