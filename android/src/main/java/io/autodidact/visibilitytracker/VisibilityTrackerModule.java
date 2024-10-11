@@ -1,5 +1,7 @@
 package io.autodidact.visibilitytracker;
 
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.graphics.Rect;
 import com.facebook.react.bridge.Callback;
@@ -38,15 +40,43 @@ public class VisibilityTrackerModule extends ReactContextBaseJavaModule {
             if (view.isShown()) {
               Rect rect = new Rect();
               view.getGlobalVisibleRect(rect);
-              double sVisible = rect.width() * rect.height();
-              double sTotal = view.getWidth() * view.getHeight();
-              success.invoke((100 * sVisible / sTotal) >= 70);
+
+              int[] location = new int[2];
+              view.getLocationOnScreen(location); // x and y in screen coordinates
+
+              int x = location[0];
+              int y = location[1];
+              int width = view.getWidth();
+              int height = view.getHeight();
+              int pageX = rect.left;
+              int pageY = rect.top;
+
+              // Get screen width and height
+              DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+              int screenWidth = displayMetrics.widthPixels;
+              int screenHeight = displayMetrics.heightPixels;
+
+              // Calculate rectTop, rectBottom, rectWidth, and isVisible
+              int rectBottom = pageY + height;
+              int rectWidth = pageX + width;
+
+              boolean isVisible =
+                      rectBottom >= 0 &&
+                              pageX >= 0 &&
+                              rectBottom <= screenHeight &&
+                              rectWidth > 0 &&
+                              rectWidth <= screenWidth;
+
+              double totalArea = width * height;
+              double visibleArea = rect.width() * rect.height();
+              boolean isSeventyPercentVisible = (visibleArea / totalArea) >= 0.7;
+
+              success.invoke(isSeventyPercentVisible && isVisible);
             } else {
               success.invoke(false);
             }
           } catch (Exception e) {
             success.invoke(false);
-
           }
         }
       });
